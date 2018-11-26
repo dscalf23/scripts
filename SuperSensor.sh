@@ -27,7 +27,7 @@ function ram {
 function cpu {
 	rm -f /tmp/topCPU.log
 	top -b -n 1 >> /tmp/topCPU.log
-	CPUCORES=$(sed 's/[[:blank:]]//g' /proc/cpuinfo | grep -w "cpucores" | sed 's/cpucores://g')
+	CPUCORES=$(cat /proc/cpuinfo | cat | grep ^processor | wc -l)
 	CPU1MIN=$(grep -w "top -" /tmp/topCPU.log | sed -n 's/^.*e://p' | sed 's/[[:blank:]]//g' | awk -F, '{ print $1 }')
 	CPU5MIN=$(grep -w "top -" /tmp/topCPU.log | sed -n 's/^.*e://p' | sed 's/[[:blank:]]//g' | awk -F, '{ print $2 }')
 	CPU15MIN=$(grep -w "top -" /tmp/topCPU.log | sed -n 's/^.*e://p' | sed 's/[[:blank:]]//g' | awk -F, '{ print $3 }')
