@@ -2,7 +2,7 @@
 #
 #Izoox.com
 #David Scalf 
-#Izoox Super Sensor v1.0
+#Izoox Super Sensor v1.1
 #Used for gathering Memory, CPU, and HDD data for PRTG
 #
 #
