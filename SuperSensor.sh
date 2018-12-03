@@ -84,70 +84,70 @@ function cpu {
 
 	PROCESSOR=($CPUCORES $CPU1MIN $CPUPER1M $CPU5MIN $CPUPER5M $CPU15MIN $CPUPER15M $CPUUS $CPUSY $CPUID)
 	AMD='{
-					"channel": "CPU Cores",
-					"value": "'${PROCESSOR[0]}'",
-					"customunit": "Core(s)"
-				},
-				{
-					"channel": "CPU 1M Load Average",
-					"value": "'${PROCESSOR[1]}'",
-					"float": "1"
-				},
-				{
-					"channel": "CPU 1M Load %",
-					"value": "'${PROCESSOR[2]}'",
-					"float": "1",
-					"customunit": "%",
-					"limitmaxwarning": "90",
-					"limitmode": "1"
-				},
-				{
-					"channel": "CPU 5M Load Average",
-					"value": "'${PROCESSOR[3]}'",
-					"float": "1"
-				},
-				{
-					"channel": "CPU 5M Load %",
-					"value": "'${PROCESSOR[4]}'",
-					"float": "1",
-					"customunit": "%",
-					"limitmaxwarning": "75",
-					"limitmode": "1"
-				},
-				{
-					"channel": "CPU 15M Load Average",
-					"value": "'${PROCESSOR[5]}'",
-					"float": "1"
-				},
-				{
-					"channel": "CPU 15M Load %",
-					"value": "'${PROCESSOR[6]}'",
-					"float": "1",
-					"customunit": "%",
-					"limitmaxwarning": "30",
-					"limitmaxerror": "50",
-					"limitmode": "1"
-				},
-				{
-					"channel": "CPU Usage User",
-					"value": "'${PROCESSOR[7]}'",
-					"float": "1",
-					"customunit": "%"
-				},
-				{
-					"channel": "CPU Usage System",
-					"value": "'${PROCESSOR[8]}'",
-					"float": "1",
-					"customunit": "%"
-				},
-				{
-					"channel": "CPU Idle",
-					"value": "'${PROCESSOR[9]}'",
-					"float": "1",
-					"customunit": "%",
-					"limitminwarning": "50",
-					"limitmode": "1"
-				},'
+		"channel": "CPU Cores",
+		"value": "'${PROCESSOR[0]}'",
+		"customunit": "Core(s)"
+	},
+	{
+		"channel": "CPU 1M Load Average",
+		"value": "'${PROCESSOR[1]}'",
+		"float": "1"
+	},
+	{
+		"channel": "CPU 1M Load %",
+		"value": "'${PROCESSOR[2]}'",
+		"float": "1",
+		"customunit": "%",
+		"limitmaxwarning": "90",
+		"limitmode": "1"
+	},
+	{
+		"channel": "CPU 5M Load Average",
+		"value": "'${PROCESSOR[3]}'",
+		"float": "1"
+	},
+	{
+		"channel": "CPU 5M Load %",
+		"value": "'${PROCESSOR[4]}'",
+		"float": "1",
+		"customunit": "%",
+		"limitmaxwarning": "75",
+		"limitmode": "1"
+	},
+	{
+		"channel": "CPU 15M Load Average",
+		"value": "'${PROCESSOR[5]}'",
+		"float": "1"
+	},
+	{
+		"channel": "CPU 15M Load %",
+		"value": "'${PROCESSOR[6]}'",
+		"float": "1",
+		"customunit": "%",
+		"limitmaxwarning": "30",
+		"limitmaxerror": "50",
+		"limitmode": "1"
+	},
+	{
+		"channel": "CPU Usage User",
+		"value": "'${PROCESSOR[7]}'",
+		"float": "1",
+		"customunit": "%"
+	},
+	{
+		"channel": "CPU Usage System",
+		"value": "'${PROCESSOR[8]}'",
+		"float": "1",
+		"customunit": "%"
+	},
+	{
+		"channel": "CPU Idle",
+		"value": "'${PROCESSOR[9]}'",
+		"float": "1",
+		"customunit": "%",
+		"limitminwarning": "50",
+		"limitmode": "1"
+	},'
 }
 function hdd {
 	rm -f /tmp/HDD.txt
