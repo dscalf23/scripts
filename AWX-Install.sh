@@ -17,10 +17,13 @@ function pause(){
 pause 'Press [Enter] to continue...'
 
 #User input
-echo what is the FQDN
+echo 'What is the FQDN of your AWX Server?'
 read FQDN
+echo "what is the admin email for your domain's ssl cert?"
+read CONTACT
 HOST=${FQDN%%.*} 
 DOMAIN=${FQDN#*.} 
+
 
 #Prepare to install stuff
 apt update -y
@@ -35,7 +38,7 @@ apt upgrade -y
 #Install the stuff
 apt install -y docker-ce docker-ce-cli
 apt install -y python python-simplejson python-pip python-software-properties
-apt install -y mosh tmux ufw
+apt install -y mosh tmux ufw openssl
 apt install -y git wget ansible
 pip install docker-py
 curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -49,4 +52,20 @@ ufw allow 60000:61000/udp
 systemctl enable ufw
 systemctl start ufw
 
+#Generate some passwords
+SECRETKEY=$(openssl rand -hex 32)
+POSTGRESPASS=$(openssl rand -hex 32)
+RABBITPASS=$(openssl rand -hex 32)
+
 #Get AWX stuffs
+mkdir -p /var/AWX
+chmod 0555 /var/AWX
+curl -L "https://raw.githubusercontent.com/dscalf23/scripts/master/AWX.yml" -o /var/AWX/AWX.yml
+
+#Edit AWX Config
+sed -i 's/CONTACT/'"$CONTACT"'/g; s/DOMAIN/'"$FQDN"'/g; s/SECRETKEY/'"$SECRETKEY"'/g; s/POSTGRESPASS/'"$POSTGRESPASS"'/g; s/RABBITPASS/'"$RABBITPASS"'/g;' /var/AWX/AWX.yml
+
+#Start DOCKER-COMPOSE
+docker-compose -f production.yml up -d
+
+echo "Everything should be golden now!"
