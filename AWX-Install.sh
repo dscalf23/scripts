@@ -66,6 +66,6 @@ curl -L "https://raw.githubusercontent.com/dscalf23/scripts/master/AWX.yml" -o /
 sed -i 's/CONTACT/'"$CONTACT"'/g; s/DOMAIN/'"$FQDN"'/g; s/SECRETKEY/'"$SECRETKEY"'/g; s/POSTGRESPASS/'"$POSTGRESPASS"'/g; s/RABBITPASS/'"$RABBITPASS"'/g;' /var/AWX/AWX.yml
 
 #Start DOCKER-COMPOSE
-docker-compose -f production.yml up -d
+docker-compose -f /var/AWX/AWX.yml up -d
 
 echo "Everything should be golden now!"
