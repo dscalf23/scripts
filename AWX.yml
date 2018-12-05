@@ -114,9 +114,9 @@ services:
       - /apps/docker-articles/nginx/certs:/etc/nginx/certs:rw
       - /apps/docker-articles/nginx/html:/usr/share/nginx/html
 
-  networks:
-    private:
-      driver: bridge
-      internal: true
-    public:
-      driver: bridge
+networks:
+  private:
+    driver: bridge
+    internal: true
+  public:
+    driver: bridge
