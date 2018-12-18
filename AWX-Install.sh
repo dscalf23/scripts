@@ -70,4 +70,13 @@ sed -i 's/CONTACT/'"$CONTACT"'/g; s/DOMAIN/'"$FQDN"'/g; s/SECRETKEY/'"$SECRETKEY
 #Start DOCKER-COMPOSE
 docker-compose -f /var/AWX/AWX.yml up -d
 
+#Ansible Notes
+echo "Your Domain Name: "$FQDN
+echo "Ansible Secret Key: "$SECRETKEY
+echo "Ansible PostgreSQL User: awx"
+echo "Ansible PostgreSQL Pass: "$POSTGRESPASS
+echo "Ansible RabbitMQ User: awx"
+echo "Ansible RabbitMQ Pass: "$RABBITPASS
+echo "Ansible AWX Default User: admin"
+echo "Ansible AWX Default User: password"
 echo "Everything should be golden now!"

@@ -71,7 +71,7 @@ services:
       - memcached
       - awx_web:awxweb
       - postgres
-    hostname: awx
+    hostname: awxtask
     user: root
     environment:
       SECRET_KEY: SECRETKEY
