@@ -33,7 +33,7 @@ apt-add-repository --yes "deb [arch=amd64] https://download.docker.com/linux/ubu
 apt-add-repository --yes ppa:ansible/ansible
 add-apt-repository --yes universe
 apt update -y
-apt upgrade -y
+apt dist-upgrade -y
 
 #Install the stuff
 apt install -y docker-ce docker-ce-cli
@@ -51,6 +51,8 @@ ufw allow https
 ufw allow 60000:61000/udp
 systemctl enable ufw
 systemctl start ufw
+systemctl enable docker
+systemctl start docker
 
 #Generate some passwords
 SECRETKEY=$(openssl rand -hex 32)
