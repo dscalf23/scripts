@@ -63,8 +63,8 @@ function ram {
 			"value": "'${MEMORY[5]}'",
 			"float": "1",
 			"customunit": "%",
-			"limitminwarning": "99",
-			"limitminerror": "90",
+			"limitminwarning": "90",
+			"limitminerror": "60",
 			"limitmode": "1"
 		},'
 }
