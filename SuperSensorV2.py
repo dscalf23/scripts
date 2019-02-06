@@ -46,7 +46,7 @@ def getCPU():
         loadOut = [{'channel':'CPU 1M Load %','value':cpuAvg[0],'float':'1','customunit':'%','limitmaxwarning':'90','limitmode':'1'},
                    {'channel':'CPU 5M Load %','value':cpuAvg[1],'float':'1','customunit':'%','limitmaxwarning':'75','limitmode':'1'},
                    {'channel':'CPU 15M Load %','value':cpuAvg[2],'float':'1','customunit':'%','limitmaxwarning':'50','limitmaxerror':'75','limitmode':'1'}]
-        cpuOut.append(loadOut)
+        cpuOut = cpuOut + loadOut
     return cpuOut
 
 #Memory Stats
@@ -100,7 +100,7 @@ def getDISK():
             diskIn = [{'channel':'Disk Total ' + volume + ':','value':diskTotal,'float':'1','customunit':'GB'},
                       {'channel':'Disk Free ' + volume + ':','value':diskFree,'float':'1','customunit':'GB'},
                       {'channel':'Disk Utilization ' + volume + ':','value':round(((diskFree/diskTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'85','limitmaxerror':'95','limitmode':'1'}]
-            diskOut.append(diskIn)
+            diskOut = diskOut + diskIn
     #Disk IO
     diskIO = psutil.disk_io_counters(perdisk=True, nowrap=True)
     disks=diskIO.keys()
@@ -126,18 +126,18 @@ def getDISK():
         #Output Section
         diskIn = [{'channel':'Disk Total ' + value + ':','value':diskRead,'float':'1','customunit':'MB'},
                   {'channel':'Disk Utilization ' + value + ':','value':diskWrite,'float':'1','customunit':'MB'}]
-        diskOut.append(diskIn)
+        diskOut = diskOut + diskIn
     return diskOut
 
 #Generate The Combined JSON
 def main():
     jsonIn=[]
-    jsonIn.append(getOS())
-    jsonIn.append(getCPU())
-    jsonIn.append(getMEM())
-    jsonIn.append(getSWAP())
-    jsonIn.append(getNET())
-    jsonIn.append(getDISK())
+    jsonIn = jsonIn + getOS()
+    jsonIn = jsonIn + getCPU()
+    jsonIn = jsonIn + getMEM()
+    jsonIn = jsonIn + getSWAP()
+    jsonIn = jsonIn + getNET()
+    jsonIn = jsonIn + getDISK()
     #Output Section
     jsonOut=json.dumps(jsonIn)
     finalJSON = """{"prtg": {"result": """ + jsonOut + """}}"""
