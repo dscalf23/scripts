@@ -20,14 +20,6 @@ kB = float(1024.0)
 #Global Variables
 osInfo = platform.system()
 
-#OS Info
-def getOS():
-    #Output Section
-    osOut = [{'channel':'Operation System','value':osInfo},
-             {'channel':'Release','value':platform.release()},
-             {'channel':'Version','value':platform.version()}]
-    return osOut
-
 #CPU Stats
 def getCPU():
     cpuCores = psutil.cpu_count(logical=True)
@@ -132,7 +124,7 @@ def getDISK():
 #Generate The Combined JSON
 def main():
     jsonIn=[]
-    jsonIn = jsonIn + getOS()
+    #jsonIn = jsonIn + getOS()
     jsonIn = jsonIn + getCPU()
     jsonIn = jsonIn + getMEM()
     jsonIn = jsonIn + getSWAP()
