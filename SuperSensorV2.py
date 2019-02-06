@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ## Izoox SuperSenor V2
 ## David Scalf
 ## 2019
