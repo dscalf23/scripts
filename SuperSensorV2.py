@@ -51,19 +51,21 @@ def getMEM():
     memOut = [{'channel':'Total Ram','value':memTotal,'float':'1','customunit':'GB'},
                {'channel':'Free Ram','value':memFree,'float':'1','customunit':'GB'},
                {'channel':'Memory Utilization %','value':round(((memUsed/memTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'80','limitmaxerror':'95','limitmode':'1'}]
-    return memOut
-
-#Swap Stats
-def getSWAP():
+    
+    #Swappieness
     swap = psutil.swap_memory()
     swapTotal = round((swap.total/gB), 2)
-    swapUsed = round((swap.used/gB), 2)
-    swapFree = round((swapTotal-swapUsed), 2)
-    #Output Section
-    swapOut = [{'channel':'Total Swap','value':swapTotal,'float':'1','customunit':'GB'},
-               {'channel':'Free Swap','value':swapFree,'float':'1','customunit':'GB'},
-               {'channel':'Swap Utilization %','value':round(((swapUsed/swapTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'20','limitmaxerror':'50','limitmode':'1'}]
-    return swapOut
+    if swapTotal > 0:
+        swapUsed = round((swap.used/gB), 2)
+        swapFree = round((swapTotal-swapUsed), 2)
+        #Output Section
+        swapOut = [{'channel':'Total Swap','value':swapTotal,'float':'1','customunit':'GB'},
+                   {'channel':'Free Swap','value':swapFree,'float':'1','customunit':'GB'},
+                   {'channel':'Swap Utilization %','value':round(((swapUsed/swapTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'20','limitmaxerror':'50','limitmode':'1'}]
+        memOut = memOut + swapOut
+        return memOut
+    else:
+        return memOut
 
 #Network Stats
 def getNET():
@@ -124,10 +126,8 @@ def getDISK():
 #Generate The Combined JSON
 def main():
     jsonIn=[]
-    #jsonIn = jsonIn + getOS()
     jsonIn = jsonIn + getCPU()
     jsonIn = jsonIn + getMEM()
-    jsonIn = jsonIn + getSWAP()
     jsonIn = jsonIn + getNET()
     jsonIn = jsonIn + getDISK()
     #Output Section
