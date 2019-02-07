@@ -69,7 +69,7 @@ def getMEM():
 
 #Network Stats
 def getNET():
-    net = psutil.net_io_counters(pernic=False, nowrap=False)
+    net = psutil.net_io_counters(pernic=False)
     netDrop = net.dropin+net.dropout
     #Output Section
     netOut = [{'channel':'Network Sent','value':round((net.bytes_sent/kB), 2),'float':'1','customunit':'GB'},
@@ -96,7 +96,7 @@ def getDISK():
                       {'channel':'Disk Utilization ' + volume + ':','value':round(((diskFree/diskTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'85','limitmaxerror':'95','limitmode':'1'}]
             diskOut = diskOut + diskIn
     #Disk IO
-    diskIO = psutil.disk_io_counters(perdisk=True, nowrap=True)
+    diskIO = psutil.disk_io_counters(perdisk=True)
     disks=diskIO.keys()
     keys = []
     x = 0
