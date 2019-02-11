@@ -45,12 +45,13 @@ def getCPU():
 def getMEM():
     mem = psutil.virtual_memory()
     memTotal = round((mem.total/gB), 2)
-    memFree = round((mem.available/gB), 2)
-    memUsed = round((memTotal-memFree), 2)
-    #Output Section
-    memOut = [{'channel':'Total Ram','value':memTotal,'float':'1','customunit':'GB'},
-               {'channel':'Free Ram','value':memFree,'float':'1','customunit':'GB'},
-               {'channel':'Memory Utilization %','value':round(((memUsed/memTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'80','limitmaxerror':'95','limitmode':'1'}]
+    if memTotal > 0:
+        memFree = round((mem.available/gB), 2)
+        memUsed = round((memTotal-memFree), 2)
+        #Output Section
+        memOut = [{'channel':'Total Ram','value':memTotal,'float':'1','customunit':'GB'},
+                   {'channel':'Free Ram','value':memFree,'float':'1','customunit':'GB'},
+                   {'channel':'Memory Utilization %','value':round(((memUsed/memTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'80','limitmaxerror':'95','limitmode':'1'}]
     
     #Swappieness
     swap = psutil.swap_memory()
@@ -89,12 +90,13 @@ def getDISK():
                 volume = volume[:3].lower()
             diskInfo = psutil.disk_usage(volume)
             diskTotal = round((diskInfo.total/gB), 2)
-            diskFree = round((diskInfo.used/gB), 2)
-            #Output Section
-            diskIn = [{'channel':'Disk Total ' + volume + ':','value':diskTotal,'float':'1','customunit':'GB'},
-                      {'channel':'Disk Free ' + volume + ':','value':diskFree,'float':'1','customunit':'GB'},
-                      {'channel':'Disk Utilization ' + volume + ':','value':round(((diskFree/diskTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'85','limitmaxerror':'95','limitmode':'1'}]
-            diskOut = diskOut + diskIn
+            if diskTotal > 0:
+                diskFree = round((diskInfo.used/gB), 2)
+                #Output Section
+                diskIn = [{'channel':'Disk Total ' + volume + ':','value':diskTotal,'float':'1','customunit':'GB'},
+                          {'channel':'Disk Free ' + volume + ':','value':diskFree,'float':'1','customunit':'GB'},
+                          {'channel':'Disk Utilization ' + volume + ':','value':round(((diskFree/diskTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'85','limitmaxerror':'95','limitmode':'1'}]
+                diskOut = diskOut + diskIn
     #Disk IO
     diskIO = psutil.disk_io_counters(perdisk=True)
     disks=diskIO.keys()
