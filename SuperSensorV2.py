@@ -35,9 +35,9 @@ def getCPU():
         cpuAvg = {}
         for counter, value in enumerate(cpuLoad):
             cpuAvg[counter] = round((float(value)/cpuCores)*100, 2)
-        loadOut = [{'channel':'CPU 1M Load %','value':cpuAvg[0],'float':'1','customunit':'%','limitmaxwarning':'90','limitmode':'1'},
-                   {'channel':'CPU 5M Load %','value':cpuAvg[1],'float':'1','customunit':'%','limitmaxwarning':'75','limitmode':'1'},
-                   {'channel':'CPU 15M Load %','value':cpuAvg[2],'float':'1','customunit':'%','limitmaxwarning':'50','limitmaxerror':'75','limitmode':'1'}]
+        loadOut = [{'channel':'CPU 1M Load %','value':cpuAvg[0],'float':'1','customunit':'%','limitmaxwarning':'100','limitmode':'1'},
+                   {'channel':'CPU 5M Load %','value':cpuAvg[1],'float':'1','customunit':'%','limitmaxwarning':'85','limitmaxerror':'100','limitmode':'1'},
+                   {'channel':'CPU 15M Load %','value':cpuAvg[2],'float':'1','customunit':'%','limitmaxwarning':'75','limitmaxerror':'90','limitmode':'1'}]
         cpuOut = cpuOut + loadOut
     return cpuOut
 
@@ -52,7 +52,7 @@ def getMEM():
         memOut = [{'channel': 'Total Ram', 'value': memTotal, 'float': '1', 'customunit': 'GB'},
                   {'channel': 'Free Ram', 'value': memFree, 'float': '1', 'customunit': 'GB'},
                   {'channel': 'Memory Utilization %', 'value': round(((memUsed / memTotal) * 100), 2), 'float': '1',
-                   'customunit': '%', 'limitmaxwarning': '80', 'limitmaxerror': '95', 'limitmode': '1'}]
+                   'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
 
     #Swappieness
     swap = psutil.swap_memory()
@@ -63,7 +63,7 @@ def getMEM():
         #Output Section
         swapOut = [{'channel':'Total Swap','value':swapTotal,'float':'1','customunit':'GB'},
                    {'channel':'Free Swap','value':swapFree,'float':'1','customunit':'GB'},
-                   {'channel':'Swap Utilization %','value':round(((swapUsed/swapTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'20','limitmaxerror':'50','limitmode':'1'}]
+                   {'channel':'Swap Utilization %','value':round(((swapUsed/swapTotal)*100), 2),'float':'1','customunit':'%','limitmaxwarning':'30','limitmaxerror':'50','limitmode':'1'}]
         memOut = memOut + swapOut
         return memOut
     else:
@@ -92,12 +92,14 @@ def getDISK():
             diskInfo = psutil.disk_usage(volume)
             diskTotal = round((diskInfo.total/gB), 2)
             if diskTotal > 0:
-                diskFree = round((diskInfo.used / gB), 2)
+                diskUsed = round((diskInfo.used / gB), 2)
+                diskFree = round((diskTotal - diskUsed), 2)
+
                 # Output Section
                 diskIn = [
                     {'channel': 'Disk Total ' + volume + ':', 'value': diskTotal, 'float': '1', 'customunit': 'GB'},
                     {'channel': 'Disk Free ' + volume + ':', 'value': diskFree, 'float': '1', 'customunit': 'GB'},
-                    {'channel': 'Disk Utilization ' + volume + ':', 'value': round(((diskFree / diskTotal) * 100), 2),
+                    {'channel': 'Disk Utilization ' + volume + ':', 'value': round(((diskUsed / diskTotal) * 100), 2),
                      'float': '1', 'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
                 diskOut = diskOut + diskIn
     #Disk IO
@@ -123,8 +125,8 @@ def getDISK():
         diskRead = round(((diskIO[value].read_bytes)/mB), 2)
         diskWrite = round(((diskIO[value].write_bytes)/mB), 2)
         #Output Section
-        diskIn = [{'channel':'Disk Total ' + value + ':','value':diskRead,'float':'1','customunit':'MB'},
-                  {'channel':'Disk Utilization ' + value + ':','value':diskWrite,'float':'1','customunit':'MB'}]
+        diskIn = [{'channel':'Disk Read ' + value + ':','value':diskRead,'float':'1','customunit':'MB'},
+                  {'channel':'Disk Write ' + value + ':','value':diskWrite,'float':'1','customunit':'MB'}]
         diskOut = diskOut + diskIn
     return diskOut
 
