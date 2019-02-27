@@ -45,28 +45,31 @@ def create_swap(size):
 # Is swap setup already
 def if_swap():
     swap_list = [line.rstrip('\n') for line in open('/proc/swaps')]
-    if swap_list[1] is not None:
-        os.system('swapoff -a')
-        # Remove old Swap
-        for counter, value in enumerate(swap_list[1:]):
-            path = shlex.split(value)
-            if path[1] == 'file':
-                os.system('sudo rm -fr ' + path[0])
-                os.system("sudo sed '\|" + path[
-                    0] + "|d' /etc/fstab > /etc/fstab.tmp && sudo mv -f /etc/fstab.tmp /etc/fstab")
-            elif path[1] == 'partition':
-                part = path[0]
-                part = part[5:]
-                id = part[:2]
-                if id == 'dm':
-                    os.system('ls -l /dev/mapper | grep ' + part + ' >> part_' + part + '.txt')
-                    tmp = shlex.split(open('part_' + part + '.txt'))
-                    os.system("sudo sed '\|" + tmp[8] + "|d' /etc/fstab > /etc/fstab.tmp && sudo mv -f /etc/fstab.tmp /etc/fstab")
-                    os.system('sudo rm -fr part_' + part + '.txt')
+    try:
+        if swap_list[1] is not None:
+            os.system('swapoff -a')
+            # Remove old Swap
+            for counter, value in enumerate(swap_list[1:]):
+                path = shlex.split(value)
+                if path[1] == 'file':
+                    os.system('sudo rm -fr ' + path[0])
+                    os.system("sudo sed '\|" + path[
+                        0] + "|d' /etc/fstab > /etc/fstab.tmp && sudo mv -f /etc/fstab.tmp /etc/fstab")
+                elif path[1] == 'partition':
+                    part = path[0]
+                    part = part[5:]
+                    id = part[:2]
+                    if id == 'dm':
+                        os.system('ls -l /dev/mapper | grep ' + part + ' >> part_' + part + '.txt')
+                        tmp = shlex.split(open('part_' + part + '.txt'))
+                        os.system("sudo sed '\|" + tmp[8] + "|d' /etc/fstab > /etc/fstab.tmp && sudo mv -f /etc/fstab.tmp /etc/fstab")
+                        os.system('sudo rm -fr part_' + part + '.txt')
 
                 else:
                     os.system("sudo sed '\|" + path[0] + "|d' /etc/fstab > /etc/fstab.tmp && sudo mv -f /etc/fstab.tmp /etc/fstab")
-    calc_swap()
+        calc_swap()
+    except:
+        calc_swap()
 
 
 start()
