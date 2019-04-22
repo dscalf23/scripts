@@ -48,7 +48,7 @@ def getMEM():
     if memTotal > 0:
         memFree = round((mem.available / gB), 2)
         if osInfo == "Linux":
-            memCached = round((mem.available / gB), 2)
+            memCached = round((mem.cached / gB), 2)
             memUsed = round((memTotal - (memFree + memCached)), 2)
         else:
             memUsed = round((memTotal - memFree), 2)
