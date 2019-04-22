@@ -47,7 +47,11 @@ def getMEM():
     memTotal = round((mem.total/gB), 2)
     if memTotal > 0:
         memFree = round((mem.available / gB), 2)
-        memUsed = round((memTotal - memFree), 2)
+        if osInfo == "Linux":
+            memCached = round((mem.available / gB), 2)
+            memUsed = round((memTotal - (memFree + memCached)), 2)
+        else:
+            memUsed = round((memTotal - memFree), 2)
         # Output Section
         memOut = [{'channel': 'Total Ram', 'value': memTotal, 'float': '1', 'customunit': 'GB'},
                   {'channel': 'Free Ram', 'value': memFree, 'float': '1', 'customunit': 'GB'},
