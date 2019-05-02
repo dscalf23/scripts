@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ## Izoox SuperSenor V2
 ## David Scalf
 ## 2019
@@ -11,14 +10,17 @@ import os
 import platform
 import sys
 import json
+import requests
 
 #Divisors/Constants
 gB = float(1073741824.0)
 mB = float(1048576.0)
 kB = float(1024.0)
+apiURL = "https://izoox.my-prtg.com:5051/"
 
 #Global Variables
 osInfo = platform.system()
+keyPATH = r"c:\izoox\prtg\token.txt"
 
 #CPU Stats
 def getCPU():
@@ -112,7 +114,7 @@ def getDISK():
     return diskOut
 
 #Generate The Combined JSON
-def main():
+def postJSON():
     jsonIn=[]
     jsonIn = jsonIn + getCPU()
     jsonIn = jsonIn + getMEM()
@@ -121,5 +123,14 @@ def main():
     #Output Section
     jsonOut=json.dumps(jsonIn)
     finalJSON = """{"prtg": {"result": """ + jsonOut + """}}"""
-    return finalJSON
-print main()
+    
+    #Read API Key
+    keyFILE = open(keyPATH, "r")
+    apiKEY = keyFILE.read()
+    keyFILE.close()
+    postURL = apiURL + apiKEY
+    #print postURL
+    #POST JSON
+    postREQ = requests.post(url = postURL, data = finalJSON)
+
+postJSON()
