@@ -10,7 +10,7 @@ import psutil
 import os
 import platform
 import sys
-import json
+import ujson
 
 #Divisors/Constants
 gB = float(1073741824.0)
@@ -126,7 +126,7 @@ def main():
     jsonIn = jsonIn + getNET()
     jsonIn = jsonIn + getDISK()
     #Output Section
-    jsonOut=json.dumps(jsonIn)
+    jsonOut=ujson.dumps(jsonIn)
     finalJSON = """{"prtg": {"result": """ + jsonOut + """}}"""
     return finalJSON
 print main()

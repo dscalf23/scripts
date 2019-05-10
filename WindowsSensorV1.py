@@ -9,8 +9,10 @@ import psutil
 import os
 import platform
 import sys
-import json
-import requests
+import ujson
+import urllib3
+import time
+#from tinydb import TinyDB, Query
 
 #Divisors/Constants
 gB = float(1073741824.0)
@@ -20,7 +22,16 @@ apiURL = "https://izoox.my-prtg.com:5051/"
 
 #Global Variables
 osInfo = platform.system()
-keyPATH = r"c:\izoox\prtg\token.txt"
+keyPATH = "c:\izoox\prtg\token.txt"
+#pollINT
+
+#Config
+def getConfig():
+    keyFILE = open(keyPATH, "r")
+    apiKEY = keyFILE.read()
+    keyFILE.close()
+    postURL = apiURL + apiKEY
+    return postURL
 
 #CPU Stats
 def getCPU():
@@ -43,8 +54,7 @@ def getMEM():
         # Output Section
         memOut = [{'channel': 'Total Ram', 'value': memTotal, 'float': '1', 'customunit': 'GB'},
                   {'channel': 'Free Ram', 'value': memFree, 'float': '1', 'customunit': 'GB'},
-                  {'channel': 'Memory Utilization %', 'value': round(((memUsed / memTotal) * 100), 2), 'float': '1',
-                   'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
+                  {'channel': 'Memory Utilization %', 'value': round(((memUsed / memTotal) * 100), 2), 'float': '1', 'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
 
     #Swappieness
     swap = psutil.swap_memory()
@@ -67,8 +77,8 @@ def getNET():
     netDrop = net.dropin+net.dropout
     #Output Section
     netOut = [{'channel':'Network Sent','value':round((net.bytes_sent/kB), 2),'float':'1','customunit':'GB'},
-               {'channel':'Network Received','value':round((net.bytes_recv/kB), 2),'float':'1','customunit':'GB'},
-               {'channel':'Packets Dropped','value':netDrop,'customunit':'#'}]
+              {'channel':'Network Received','value':round((net.bytes_recv/kB), 2),'float':'1','customunit':'GB'},
+              {'channel':'Packets Dropped','value':netDrop,'customunit':'#'}]
     return netOut
 
 #Disk Stats
@@ -87,11 +97,9 @@ def getDISK():
                 diskFree = round((diskTotal - diskUsed), 2)
 
                 # Output Section
-                diskIn = [
-                    {'channel': 'Disk Total ' + volume + ':', 'value': diskTotal, 'float': '1', 'customunit': 'GB'},
-                    {'channel': 'Disk Free ' + volume + ':', 'value': diskFree, 'float': '1', 'customunit': 'GB'},
-                    {'channel': 'Disk Utilization ' + volume + ':', 'value': round(((diskUsed / diskTotal) * 100), 2),
-                     'float': '1', 'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
+                diskIn = [{'channel': 'Disk Total ' + volume + ':', 'value': diskTotal, 'float': '1', 'customunit': 'GB'},
+                          {'channel': 'Disk Free ' + volume + ':', 'value': diskFree, 'float': '1', 'customunit': 'GB'},
+                          {'channel': 'Disk Utilization ' + volume + ':', 'value': round(((diskUsed / diskTotal) * 100), 2), 'float': '1', 'customunit': '%', 'limitmaxwarning': '85', 'limitmaxerror': '95', 'limitmode': '1'}]
                 diskOut = diskOut + diskIn
     #Disk IO
     diskIO = psutil.disk_io_counters(perdisk=True)
@@ -114,23 +122,29 @@ def getDISK():
     return diskOut
 
 #Generate The Combined JSON
-def postJSON():
+def postJSON(postURL):
     jsonIn=[]
     jsonIn = jsonIn + getCPU()
     jsonIn = jsonIn + getMEM()
     jsonIn = jsonIn + getNET()
     jsonIn = jsonIn + getDISK()
     #Output Section
-    jsonOut=json.dumps(jsonIn)
+    jsonOut=ujson.dumps(jsonIn)
     finalJSON = """{"prtg": {"result": """ + jsonOut + """}}"""
-    
-    #Read API Key
-    keyFILE = open(keyPATH, "r")
-    apiKEY = keyFILE.read()
-    keyFILE.close()
-    postURL = apiURL + apiKEY
-    #print postURL
     #POST JSON
-    postREQ = requests.post(url = postURL, data = finalJSON)
+    #postREQ = requests.post(url = postURL, data = finalJSON)
+    http = urllib3.PoolManager()
+    postREQ = http.request('POST', postURL, headers={'Content-Type': 'application/json'}, body=finalJSON)
 
-postJSON()
+def main():
+    postURL = getConfig()
+    wile True:
+        status = postJSON(postURL)
+        errorCount = 0
+        if status != 200
+            errorCount = errorCount + 1
+        if errorCount > 4
+            break
+        time.sleep 60
+
+main()
