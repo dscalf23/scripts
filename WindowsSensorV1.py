@@ -145,6 +145,6 @@ def main():
             errorCount = errorCount + 1
         if errorCount > 4
             break
-        time.sleep 60
+        time.sleep(60)
 
 main()
